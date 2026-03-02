@@ -1,0 +1,52 @@
+<ion-app class="home-page" id="home-content">
+	<app-header>
+		<div headerLeft class="btn-container left-header-btn">
+			<ion-button class="menu-trigger" size="small" fill="clear" color="dark" (click)="openMainMenu()">
+				<ion-icon slot="icon-only" name="menu"></ion-icon>
+			</ion-button>
+		</div>
+		<h5 headerCenter [innerHTML]="'home_lable' | translate"></h5>
+	</app-header>
+
+	<ion-content fullscreen="true">
+		<div class="app-grid__container">
+			<div class="grid-flex">
+				<div class="grid-item" *ngFor="let item of view.items; let idx = index">
+					<ng-container *ngIf="item.url">
+						<ion-card
+							*ngIf="isInternalUrl(item.url); else externalLink"
+							class="grid-card"
+							[routerLink]="item.url"
+							routerDirection="root"
+							(click)="onRowClick(item)"
+							[class.clickable]="rowClickable"
+						>
+							<ng-container *ngTemplateOutlet="cardContent; context: { $implicit: item, idx: idx }"></ng-container>
+						</ion-card>
+					</ng-container>
+
+					<ng-template #externalLink>
+						<a [href]="item.url" target="_blank" rel="noopener noreferrer" class="card-link" (click)="logNavigation('external', item)">
+							<ion-card class="grid-card">
+								<ng-container *ngTemplateOutlet="cardContent; context: { $implicit: item, idx: idx }"></ng-container>
+							</ion-card>
+						</a>
+					</ng-template>
+				</div>
+			</div>
+
+			<ng-template #cardContent let-item let-idx="idx">
+				<ng-container *ngIf="shouldShowImage(item); else placeholderCard">
+					<ion-img class="card-image" [src]="getImageSrc(item)" [alt]="getLabel(item) | translate"></ion-img>
+				</ng-container>
+
+				<ng-template #placeholderCard>
+					<div class="placeholder-card" [ngClass]="getPlaceholderTone(item, idx)">
+						<div class="placeholder-pattern" aria-hidden="true"></div>
+						<ion-label class="placeholder-label" [innerHTML]="getLabel(item) | translate"></ion-label>
+					</div>
+				</ng-template>
+			</ng-template>
+		</div>
+	</ion-content>
+</ion-app>

@@ -1,0 +1,129 @@
+<ion-app>
+	<app-header>
+		<div headerLeft class="btn-container left-header-btn">
+			<ion-button class="menu-trigger" size="small" fill="clear" color="dark" (click)="openMainMenu()">
+				<ion-icon slot="icon-only" name="menu"></ion-icon>
+			</ion-button>
+		</div>
+		<h5 headerCenter [innerHTML]="'catalog_of_facts' | translate"></h5>
+		<div headerBottom class="catalog-search">
+			<app-search-bar (searchChange)="onSearch($event)"></app-search-bar>
+		</div>
+		<ion-button
+			headerRight
+			class="home-trigger right-header-btn"
+			size="small"
+			fill="clear"
+			color="dark"
+			routerLink="/"
+			routerDirection="root"
+			[attr.aria-label]="'home_lable' | translate"
+		>
+			<ion-icon slot="icon-only" name="home-outline"></ion-icon>
+		</ion-button>
+	</app-header>
+
+	<ion-content [fullscreen]="true">
+		<ion-refresher slot="fixed" (ionRefresh)="loadCatalog($event)">
+			<ion-refresher-content></ion-refresher-content>
+		</ion-refresher>
+
+		<div class="state" *ngIf="isLoading">
+			<ion-spinner name="crescent"></ion-spinner>
+		</div>
+
+		<ion-card class="error-card" *ngIf="loadError">
+			<ion-card-header>
+				<ion-card-title [innerHTML]="'error_title' | translate"></ion-card-title>
+			</ion-card-header>
+			<ion-card-content>{{ loadError }}</ion-card-content>
+		</ion-card>
+
+		<ion-accordion-group class="facts-accordion" *ngIf="!isLoading && factsByCategory.length">
+			<ion-accordion class="fact-category" *ngFor="let group of factsByCategory; trackBy: trackByCategory" [value]="group.category">
+				<ion-item slot="header" lines="full" class="sticky-accordion-header">
+					<ion-label>
+						<h2>{{ group.category }}</h2>
+						<p>{{ group.items.length }} {{ 'entries' | translate }}</p>
+					</ion-label>
+				</ion-item>
+				<div slot="content" class="category-content">
+					<ion-list>
+						<ion-item class="fact-row" *ngFor="let fact of group.items; trackBy: trackByFact" lines="full" button (click)="openFactModal(fact)">
+							<ion-label>
+								<h3 class="fact-title">{{ fact.tatbestandsnummer }}</h3>
+								<p>{{ fact.tatbestand_datenbank }}</p>
+								<!-- <p class="meta">
+									<span *ngIf="fact.paragraphen_datenbank">§ {{ fact.paragraphen_datenbank }}</span>
+									<span *ngIf="fact.euro"> · {{ fact.euro }} €</span>
+								</p> -->
+							</ion-label>
+						</ion-item>
+					</ion-list>
+				</div>
+			</ion-accordion>
+		</ion-accordion-group>
+
+		<ion-item class="empty-state" *ngIf="!isLoading && !factsByCategory.length && !loadError">
+			<ion-label [innerHTML]="'no_entries_found' | translate"></ion-label>
+		</ion-item>
+
+		<ion-modal
+			class="fact-modal"
+			[isOpen]="factModalOpen"
+			[enterAnimation]="modalEnterAnimation"
+			[leaveAnimation]="modalLeaveAnimation"
+			(didDismiss)="closeFactModal()"
+		>
+			<ng-template>
+				<app-header class="modal-header">
+					<ion-button headerLeft fill="clear" color="dark" (click)="closeFactModal()">
+						<ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+					</ion-button>
+					<h5 headerCenter class="app-calendar__title" [innerHTML]="'detail_view' | translate"></h5>
+				</app-header>
+
+				<ion-content class="fact-detail">
+					<ion-card *ngIf="selectedFact as fact" class="fact-card">
+						<ion-card-header>
+							<div class="header-row">
+								<ion-chip class="tbnr-chip" color="primary">
+									<ion-label>{{ fact.tatbestandsnummer }}</ion-label>
+								</ion-chip>
+								<ion-card-title class="fact-text"> {{ fact.tatbestand_datenbank }} </ion-card-title>
+							</div>
+						</ion-card-header>
+
+						<ion-card-content>
+							<ion-list lines="none">
+								<div class="section">
+									<div class="section-title" [innerHTML]="'legal_basis' | translate"></div>
+									<div class="paragraph ion-text-wrap" [innerText]="formatParagraphs(fact.paragraphen_datenbank)"></div>
+								</div>
+								<ion-item class="kv">
+									<ion-label [innerHTML]="'fine' | translate"></ion-label>
+									<div class="props">{{ formatEuro(fact.euro) }}</div>
+								</ion-item>
+								<ion-item class="kv" *ngIf="fact.p">
+									<ion-label [innerHTML]="'points' | translate"></ion-label>
+									<div class="props" slot="end">{{ fact.p }}</div>
+								</ion-item>
+								<ion-item class="kv" *ngIf="fact.fap">
+									<ion-label [innerHTML]="'probationary_license' | translate"></ion-label>
+									<div class="props" slot="end">{{ fact.fap }}</div>
+								</ion-item>
+								<ion-item class="kv" *ngIf="fact.fv">
+									<ion-label [innerHTML]="'driving_ban' | translate"></ion-label>
+									<div class="props" slot="end">{{ fact.fv }}</div>
+								</ion-item>
+								<ion-item class="kv">
+									<ion-note [innerHTML]="'catalog_of_facts_edition_note' | translate"></ion-note>
+								</ion-item>
+							</ion-list>
+						</ion-card-content>
+					</ion-card>
+				</ion-content>
+			</ng-template>
+		</ion-modal>
+	</ion-content>
+</ion-app>

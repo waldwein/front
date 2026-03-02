@@ -1,0 +1,192 @@
+<app-header class="modal-header" [menuState]="false">
+	<ion-button headerLeft fill="clear" color="dark" (click)="closeModal()">
+		<ion-icon slot="icon-only" name="close-outline"></ion-icon>
+	</ion-button>
+	<div headerCenter [ngSwitch]="view.activeIndex">
+		<ng-container *ngSwitchCase="0">
+			<h5 class="app-calendar__title" [innerHTML]="'select_serviceplan_step_0' | translate"></h5>
+		</ng-container>
+
+		<ng-container *ngSwitchCase="1">
+			<h5 class="app-calendar__title" [innerHTML]="selectTitle | translate"></h5>
+		</ng-container>
+
+		<ng-container *ngSwitchCase="2">
+			<h5 class="app-calendar__title" [innerHTML]="'select_serviceplan_step_2' | translate"></h5>
+		</ng-container>
+
+		<!-- optional step -->
+		<ng-container *ngSwitchCase="10">
+			<h5 class="app-calendar__title" [innerHTML]="'serviceplan_optional_step' | translate"></h5>
+		</ng-container>
+	</div>
+</app-header>
+
+<swiper-container #selectSPSwiper class="swiper-container" pagination="true" allow-touch-move="false">
+	<!-- slide 1 -->
+	<swiper-slide>
+		<ion-content>
+			<div class="container">
+				<div class="app-list" lines="none">
+					<ion-item lines="none" class="list-item" *ngFor="let country of countries; let index">
+						<button color="clear" class="app-btn country-card" [class.reset-option]="country.isReset" (click)="pickCountry(country.id)">
+							<ion-thumbnail>
+								<img class="coutry-img" [src]="getEmblemSrc(country)" />
+							</ion-thumbnail>
+							<ion-label id="{{ country.id }}" class="country-name" [innerHTML]="country.name | translate"></ion-label>
+						</button>
+					</ion-item>
+				</div>
+			</div>
+		</ion-content>
+	</swiper-slide>
+
+	<!-- slide 2 -->
+	<swiper-slide>
+		<div class="container">
+			<div class="service-list">
+				<ion-list>
+					<ion-item lines="none" class="list-item" *ngFor="let plan of filteredPlans">
+						<div class="plan-row">
+							<button color="clear" class="app-btn country-card plan-card" (click)="pickServiceplan(plan)">
+								<ion-label [innerHTML]="plan.name | translate"></ion-label>
+							</button>
+
+							<div class="plan-actions" *ngIf="adminMode || plan?.local">
+								<ion-button
+									*ngIf="!adminMode"
+									color="primary"
+									fill="clear"
+									class="publish-serviceplan-button"
+									(click)="setVisibility(plan, $event)"
+								>
+									<ion-icon name="cloud-upload-outline"></ion-icon>
+								</ion-button>
+
+								<ion-button color="danger" fill="clear" class="delete-serviceplan-button" (click)="requestDeleteServiceplan(plan, $event)">
+									<ion-icon name="trash-outline"></ion-icon>
+								</ion-button>
+							</div>
+						</div>
+					</ion-item>
+				</ion-list>
+			</div>
+
+			<ion-card *ngIf="!adminMode && view.plan.public" class="public-card">
+				<ion-item lines="none" class="region-item">
+					<ion-icon name="location-outline" slot="start"></ion-icon>
+					<ion-select
+						class="app_input"
+						[label]="'region' | translate"
+						[okText]="'okay' | translate"
+						[cancelText]="'cancel' | translate"
+						[(ngModel)]="view.plan.countryId"
+						(ionChange)="onUserInputChanged()"
+					>
+						<ng-container *ngFor="let country of selectableCountries">
+							<ion-select-option [innerHTML]="country.name | translate" [value]="country.id"></ion-select-option>
+						</ng-container>
+					</ion-select>
+				</ion-item>
+
+				<ion-item lines="none" class="public-note-item" *ngIf="view.plan.public">
+					<ion-icon name="create-outline" slot="start"></ion-icon>
+					<ion-input
+						class="app_input"
+						[label]="'chosen_day_info' | translate"
+						[placeholder]="'serviceplan_publish_public_hint' | translate"
+						maxlength="140"
+						[(ngModel)]="note"
+						(ionInput)="onUserInputChanged()"
+					></ion-input>
+				</ion-item>
+
+				<ion-item lines="none" class="public-note-item" *ngIf="view.plan.public">
+					<ion-icon name="mail-outline" slot="start"></ion-icon>
+					<ion-input
+						class="app_input"
+						type="email"
+						inputmode="email"
+						[label]="'admin_email' | translate"
+						[placeholder]="'admin_email' | translate"
+						[required]="true"
+						[(ngModel)]="author"
+						(ionInput)="onUserInputChanged()"
+					></ion-input>
+				</ion-item>
+			</ion-card>
+		</div>
+	</swiper-slide>
+
+	<!-- slide 3 -->
+	<swiper-slide>
+		<div class="container">
+			<div class="group-list">
+				<ion-list>
+					<ion-item lines="none" class="list-item">
+						<button color="primary" class="app-btn country-card plan-card" (click)="pickGroup('all')">
+							<ion-label [innerHTML]="'Alle Gruppen' | translate"></ion-label>
+						</button>
+					</ion-item>
+					<ion-item lines="none" class="list-item" *ngFor="let group of filteredGroups; let iGroup = index">
+						<button color="clear" class="app-btn country-card plan-card" (click)="pickGroup(iGroup)">
+							<!-- <ion-thumbnail>
+                  <img
+                    class="coutry-img"
+                    src="../../../assets/img/regions/{{ coutry.imgPath }}.svg"
+                  />
+                </ion-thumbnail> -->
+
+							<!-- name -->
+							<ion-label [innerHTML]="group.name | translate"></ion-label>
+						</button>
+						<!-- <ion-item *ngFor="let branch of branchArray" (click)="goHome(branch)"> -->
+						<!-- Thumbnail or icon -->
+					</ion-item>
+				</ion-list>
+			</div>
+		</div>
+	</swiper-slide>
+</swiper-container>
+
+<ion-footer class="ion-no-border">
+	<ion-row class="row-2">
+		<!-- back btn -->
+		<ion-col size="6">
+			<ion-button *ngIf="view.activeIndex > 0" size="block" fill="clear" color="primary" shape="round" (click)="backSlide()">
+				<ion-icon name="chevron-back-outline"></ion-icon>
+				<ion-label [innerHTML]="'goBack' | translate"></ion-label>
+			</ion-button>
+		</ion-col>
+
+		<ion-col size="6">
+			<ion-button
+				*ngIf="!adminMode && view.activeIndex === 1 && view.plan.public && view.plan.countryId"
+				size="block"
+				fill="outline"
+				color="primary"
+				shape="round"
+				[disabled]="submitInProgress || !canSubmitForReview()"
+				(click)="submitPlanForReview($event)"
+			>
+				<ion-icon name="checkmark-outline" slot="start"></ion-icon>
+				<ion-label [innerHTML]="'submit' | translate"></ion-label>
+			</ion-button>
+		</ion-col>
+	</ion-row>
+</ion-footer>
+
+<ion-alert
+	[isOpen]="aplyAlert.state"
+	[header]="aplyAlert.header | translate"
+	[buttons]="aplyAlert.buttons"
+	(didDismiss)="aplyAlert.setAplyAlertState()"
+></ion-alert>
+
+<ion-alert
+	[isOpen]="deleteAlert.state"
+	[header]="deleteAlert.header | translate"
+	[message]="deleteAlert.message | translate"
+	[buttons]="deleteAlert.buttons"
+	(didDismiss)="deleteAlert.setDeleteAlertState()"
+></ion-alert>

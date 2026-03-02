@@ -1,0 +1,217 @@
+.swiper-container {
+	height: 100%;
+	width: 100%;
+}
+
+.modal-header .app-calendar__title {
+	margin: 0;
+}
+
+.container {
+	padding: 10px;
+	height: 100%;
+
+	&.modal-header {
+		display: flex;
+		justify-content: center;
+	}
+}
+
+ion-col.app-col {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+// slide 1
+.container {
+	.coutry-img {
+		// width: 68px;
+		object-fit: contain;
+		padding: 4px;
+	}
+
+	button.app-btn {
+		width: 100%;
+	}
+
+	button.reset-option {
+		background: var(--ion-color-light, #f4f5f8);
+	}
+
+	ion-item.list-item {
+		--background: transparent;
+		--padding-start: 0;
+		--inner-padding-end: 0;
+		--inner-border-width: 0;
+		--border-width: 0;
+		margin-bottom: 8px;
+	}
+
+	.country-card {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 10px 12px;
+		border-radius: 10px;
+		background: #f7f9fc; /* makes it obvious it's a tappable button */
+		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+		border: 0;
+		cursor: pointer;
+		-webkit-tap-highlight-color: transparent;
+		touch-action: manipulation;
+		transition:
+			background-color 120ms ease,
+			box-shadow 120ms ease;
+
+		&:active {
+			background: rgba(0, 90, 172, 0.14); /* #005AAC */
+			box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+		}
+
+		&.ion-activated {
+			background: rgba(0, 90, 172, 0.14); /* #005AAC */
+			box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+		}
+
+		@media (hover: hover) {
+			&:hover {
+				background: #eef4fb;
+			}
+		}
+
+		ion-thumbnail {
+			width: 48px;
+			height: 48px;
+		}
+
+		.country-name {
+			font-weight: 600;
+			color: #1e1e1e;
+			text-align: left;
+		}
+	}
+
+	.plan-card {
+		justify-content: space-between;
+		flex: 1 1 auto;
+		min-width: 0;
+
+		ion-label {
+			font-weight: 600;
+			color: #1e1e1e;
+			text-align: left;
+		}
+	}
+
+	.plan-row {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		width: 100%;
+	}
+
+	.plan-actions {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+
+		ion-button {
+			margin: 0;
+			height: 32px;
+			--padding-start: 6px;
+			--padding-end: 6px;
+		}
+	}
+
+	.app-list {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		flex-direction: column;
+		.day-card {
+			width: 44px;
+			height: 44px;
+			margin: 4px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			font-size: 16px;
+			font-weight: 600;
+			.day-wrap {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+		}
+	}
+}
+
+.public-card {
+	margin: 10px 0;
+	border-radius: 12px;
+	border: 1px solid #dce6f3;
+	background: #ffffff;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+	overflow: hidden;
+
+	ion-item {
+		--background: transparent;
+		--padding-start: 12px;
+		--padding-end: 12px;
+		--inner-padding-end: 8px;
+		--min-height: 48px;
+		--border-width: 0;
+		--inner-border-width: 0;
+	}
+
+	ion-item + ion-item {
+		border-top: 1px solid #dce6f3;
+	}
+
+	ion-icon {
+		color: #005aac;
+	}
+
+	ion-select,
+	ion-input {
+		font-size: 14px;
+	}
+}
+
+// slide 3
+.app_ion-list {
+	padding: 0 0 4px;
+}
+.app_ion-card {
+	margin: 10px;
+
+	.item {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 4px;
+		ion-label {
+			padding: 0 5px;
+		}
+		.time-wrapper {
+			.timepicker-container {
+				display: flex;
+				align-items: center;
+				padding-left: 5px;
+			}
+		}
+	}
+}
+
+.time-wrapper {
+	display: flex;
+	align-items: center;
+}
+
+// footer
+.footer-col {
+	ion-icon {
+		margin-right: 5px;
+	}
+}

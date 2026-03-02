@@ -1,0 +1,65 @@
+<ion-app>
+	<app-header>
+		<div headerLeft class="btn-container left-header-btn">
+			<ion-button class="menu-trigger" size="small" fill="clear" color="dark" (click)="openMainMenu()">
+				<ion-icon slot="icon-only" name="menu"></ion-icon>
+			</ion-button>
+		</div>
+
+		<h5 headerCenter [innerHTML]="'main_inspection' | translate"></h5>
+		<ion-button
+			headerRight
+			class="home-trigger right-header-btn"
+			size="small"
+			fill="clear"
+			color="dark"
+			routerLink="/"
+			routerDirection="root"
+			[attr.aria-label]="'home_lable' | translate"
+		>
+			<ion-icon slot="icon-only" name="home-outline"></ion-icon>
+		</ion-button>
+	</app-header>
+
+	<ion-content [fullscreen]="true">
+		<div class="container">
+			<ion-card class="hu-card">
+				<div class="plaketten">
+					<div class="plakette" *ngFor="let item of items; trackBy: trackByItem">
+						<img [src]="item.image" [alt]="'HU ' + item.year" (error)="onImageError($event)" />
+						<span class="jahreszahl">{{ item.year }}</span>
+					</div>
+				</div>
+			</ion-card>
+
+			<ion-card class="info-card">
+				<ion-list>
+					<ion-item *ngFor="let info of infoItems; trackBy: trackByInfo">
+						<ion-label class="ion-text-wrap">
+							<p [innerHTML]="info | translate"></p>
+						</ion-label>
+					</ion-item>
+				</ion-list>
+			</ion-card>
+
+			<ion-card class="table-card">
+				<table>
+					<thead>
+						<tr>
+							<th style="width: 20%"><b [innerHTML]="'tb_number' | translate"></b></th>
+							<th><b [innerHTML]="'offense_text' | translate"></b></th>
+							<th style="width: 22%"><b [innerHTML]="'euro_points' | translate"></b></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngFor="let row of fineRows; trackBy: trackByFine">
+							<td>{{ row.tb }}</td>
+							<td [innerHTML]="row.textKey | translate"></td>
+							<td [innerHTML]="row.fineKey | translate"></td>
+						</tr>
+					</tbody>
+				</table>
+			</ion-card>
+		</div>
+	</ion-content>
+</ion-app>

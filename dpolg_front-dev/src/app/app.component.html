@@ -1,0 +1,101 @@
+<ion-app>
+	<ion-split-pane class="app-shell" contentId="main-content" when="(min-width: 1024px)">
+		<ion-menu menuId="main-menu" class="menu-left" contentId="main-content" type="overlay">
+			<app-header class="main-menu__header" [centerOnly]="true">
+				<div headerCenter class="container">
+					<ion-img src="assets/img/logo.png" alt="Logo"></ion-img>
+				</div>
+			</app-header>
+
+			<ion-content class="main-menu">
+				<div class="ion-padding app-menu_container">
+					<section class="container menu-primary">
+						<div class="menu-actions">
+							<ion-button class="menu-action" expand="block" fill="outline" routerLink="/" routerDirection="root" (click)="closeMainMenu()">
+								<span class="action-start" slot="start">
+									<ion-icon name="home-outline"></ion-icon>
+								</span>
+								<ion-label class="action-label" [innerHTML]="'home_lable' | translate"></ion-label>
+								<ion-icon class="action-end" name="chevron-forward" slot="end"></ion-icon>
+							</ion-button>
+
+							<ion-button
+								class="menu-action"
+								expand="block"
+								fill="outline"
+								routerLink="pages/calendar"
+								routerDirection="root"
+								(click)="closeMainMenu()"
+							>
+								<span class="action-start" slot="start">
+									<ion-icon name="calendar-outline"></ion-icon>
+								</span>
+								<ion-label class="action-label" [innerHTML]="'calendar' | translate"></ion-label>
+								<ion-icon class="action-end" name="chevron-forward" slot="end"></ion-icon>
+							</ion-button>
+
+							<ion-button
+								class="menu-action"
+								expand="block"
+								fill="outline"
+								href="https://www.dpolg-markt-select.de/"
+								target="_blank"
+								(click)="closeMainMenu()"
+							>
+								<span class="action-start" slot="start">
+									<ion-icon name="cart-outline"></ion-icon>
+								</span>
+								<ion-label class="action-label" [innerHTML]="'shop' | translate"></ion-label>
+								<ion-icon class="action-end" name="chevron-forward" slot="end"></ion-icon>
+							</ion-button>
+
+							<ion-button
+								class="menu-action"
+								expand="block"
+								fill="outline"
+								routerLink="pages/account"
+								routerDirection="root"
+								(click)="closeMainMenu()"
+							>
+								<span class="action-start" slot="start">
+									<ion-icon name="person-outline"></ion-icon>
+								</span>
+								<ion-label class="action-label" [innerHTML]="'admin_panel' | translate"></ion-label>
+								<ion-icon class="action-end" name="chevron-forward" slot="end"></ion-icon>
+							</ion-button>
+						</div>
+					</section>
+
+					<section class="container menu-secondary-links">
+						<!-- <ion-label [innerHTML]="'legal' | translate"></ion-label> -->
+						<a class="menu-secondary-link" [href]="legalLinks.terms_of_use" target="_blank" rel="noopener noreferrer" (click)="closeMainMenu()">
+							<span class="menu-secondary-link__start">
+								<ion-icon name="document-text-outline" aria-hidden="true"></ion-icon>
+								<span [innerHTML]="'agb' | translate"></span>
+							</span>
+							<ion-icon name="open-outline" aria-hidden="true"></ion-icon>
+						</a>
+
+						<a class="menu-secondary-link" [href]="legalLinks.privacy_policy" target="_blank" rel="noopener noreferrer" (click)="closeMainMenu()">
+							<span class="menu-secondary-link__start">
+								<ion-icon name="document-text-outline" aria-hidden="true"></ion-icon>
+								<span [innerHTML]="'privacy_policy' | translate"></span>
+							</span>
+							<ion-icon name="open-outline" aria-hidden="true"></ion-icon>
+						</a>
+
+						<a class="menu-secondary-link" [href]="legalLinks.imprint" target="_blank" rel="noopener noreferrer" (click)="closeMainMenu()">
+							<span class="menu-secondary-link__start">
+								<ion-icon name="document-text-outline" aria-hidden="true"></ion-icon>
+								<span [innerHTML]="'imprint' | translate"></span>
+							</span>
+							<ion-icon name="open-outline" aria-hidden="true"></ion-icon>
+						</a>
+					</section>
+				</div>
+			</ion-content>
+		</ion-menu>
+
+		<ion-router-outlet id="main-content"></ion-router-outlet>
+	</ion-split-pane>
+</ion-app>

@@ -1,0 +1,118 @@
+<ion-app>
+	<app-header>
+		<div headerLeft class="btn-container left-header-btn">
+			<ion-button class="menu-trigger" size="small" fill="clear" color="dark" (click)="openMainMenu()">
+				<ion-icon slot="icon-only" name="menu"></ion-icon>
+			</ion-button>
+		</div>
+		<h5 headerCenter [innerHTML]="'youth_protection' | translate"></h5>
+		<div headerBottom class="catalog-search">
+			<app-search-bar (searchChange)="onSearch($event)"></app-search-bar>
+		</div>
+		<ion-button
+			headerRight
+			class="home-trigger right-header-btn"
+			size="small"
+			fill="clear"
+			color="dark"
+			routerLink="/"
+			routerDirection="root"
+			[attr.aria-label]="'home_lable' | translate"
+		>
+			<ion-icon slot="icon-only" name="home-outline"></ion-icon>
+		</ion-button>
+	</app-header>
+
+	<ion-content [fullscreen]="true">
+		<ion-refresher slot="fixed" (ionRefresh)="loadItems($event)">
+			<ion-refresher-content></ion-refresher-content>
+		</ion-refresher>
+
+		<div class="state" *ngIf="isLoading">
+			<ion-spinner name="crescent"></ion-spinner>
+		</div>
+
+		<ion-card class="error-card" *ngIf="loadError">
+			<ion-card-header>
+				<ion-card-title [innerHTML]="'error_title' | translate"></ion-card-title>
+			</ion-card-header>
+			<ion-card-content>{{ loadError }}</ion-card-content>
+		</ion-card>
+
+		<ion-accordion-group class="youth-accordion" *ngIf="!isLoading && itemsByCategory.length">
+			<ion-accordion class="youth-category" *ngFor="let group of itemsByCategory; trackBy: trackByCategory" [value]="group.category">
+				<ion-item slot="header" lines="full" class="sticky-accordion-header">
+					<ion-label>
+						<h2>{{ group.category }}</h2>
+						<p>{{ group.items.length }} {{ 'entries' | translate }}</p>
+					</ion-label>
+				</ion-item>
+				<div slot="content" class="category-content">
+					<ion-list>
+						<ion-item class="youth-row" *ngFor="let item of group.items; trackBy: trackByItem" lines="full" button (click)="openItemModal(item)">
+							<ion-label>
+								<h3 class="youth-title" [innerHTML]="formatLocation(getLocation(item))"></h3>
+								<p class="youth-meta">
+									<span>{{ 'age_14_short' | translate }}: {{ getAgeValue(item, '14') || '-' }}</span>
+									<span>&middot; {{ 'age_16_short' | translate }}: {{ getAgeValue(item, '16') || '-' }}</span>
+									<span>&middot; {{ 'age_18_short' | translate }}: {{ getAgeValue(item, '18') || '-' }}</span>
+								</p>
+							</ion-label>
+						</ion-item>
+					</ion-list>
+				</div>
+			</ion-accordion>
+		</ion-accordion-group>
+
+		<ion-item class="empty-state" *ngIf="!isLoading && !itemsByCategory.length && !loadError">
+			<ion-label [innerHTML]="'no_entries_found' | translate"></ion-label>
+		</ion-item>
+
+		<ion-modal
+			class="youth-modal"
+			[isOpen]="itemModalOpen"
+			[enterAnimation]="modalEnterAnimation"
+			[leaveAnimation]="modalLeaveAnimation"
+			(didDismiss)="closeItemModal()"
+		>
+			<ng-template>
+				<app-header class="modal-header">
+					<ion-button headerLeft fill="clear" color="dark" (click)="closeItemModal()">
+						<ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+					</ion-button>
+					<h5 headerCenter class="app-calendar__title" [innerHTML]="'detail_view' | translate"></h5>
+				</app-header>
+
+				<ion-content class="youth-detail">
+					<ion-card *ngIf="selectedItem as item" class="youth-card">
+						<ion-card-header>
+							<div class="header-row">
+								<ion-card-title class="youth-text" [innerHTML]="formatLocation(getLocation(item))"></ion-card-title>
+							</div>
+						</ion-card-header>
+
+						<ion-card-content>
+							<div class="section">
+								<div class="section-title" [innerHTML]="'age_levels' | translate"></div>
+								<ion-list lines="none">
+									<ion-item class="kv">
+										<ion-label [innerHTML]="'age_14_years' | translate"></ion-label>
+										<div class="props" slot="end">{{ getAgeValue(item, '14') || '-' }}</div>
+									</ion-item>
+									<ion-item class="kv">
+										<ion-label [innerHTML]="'age_16_years' | translate"></ion-label>
+										<div class="props" slot="end">{{ getAgeValue(item, '16') || '-' }}</div>
+									</ion-item>
+									<ion-item class="kv">
+										<ion-label [innerHTML]="'age_18_years' | translate"></ion-label>
+										<div class="props" slot="end">{{ getAgeValue(item, '18') || '-' }}</div>
+									</ion-item>
+								</ion-list>
+							</div>
+						</ion-card-content>
+					</ion-card>
+				</ion-content>
+			</ng-template>
+		</ion-modal>
+	</ion-content>
+</ion-app>

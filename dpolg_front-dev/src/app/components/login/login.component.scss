@@ -1,0 +1,20 @@
+.admin-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 16px;
+}
+
+.admin-login__card {
+  width: min(420px, 100%);
+}
+
+.admin-login__form {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-login__submit {
+  margin-top: 8px;
+}

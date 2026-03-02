@@ -1,0 +1,228 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
+/* @import "@ionic/angular/css/palettes/dark.always.css"; */
+/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+@import "@ionic/angular/css/palettes/dark.system.css";
+
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
+
+@import "swiper/scss";
+@import "swiper/scss/navigation";
+@import "swiper/scss/pagination";
+
+@font-face {
+	font-family: "Roboto";
+	font-style: normal;
+	font-weight: 100;
+	src: url("assets/fonts/Roboto/static/Roboto-Thin.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "Roboto";
+	font-style: normal;
+	font-weight: 400;
+	src: url("assets/fonts/Roboto/static/Roboto-Regular.ttf") format("truetype");
+}
+
+@font-face {
+	font-family: "Roboto";
+	font-style: normal;
+	font-weight: 600;
+	src: url("assets/fonts/Roboto/static/Roboto-Bold.ttf") format("truetype");
+}
+
+:root {
+	--app-shell-max-width: 1868px;
+	--app-side-width: 280px;
+}
+
+@media (min-width: 1100px) {
+	:root {
+		--app-side-width: 320px;
+	}
+}
+
+// html, body {
+//   font-family: 'Roboto', sans-serif;
+// }
+
+// * {
+//   box-sizing: border-box;
+//   margin: 0;
+//   padding: 0;
+// }
+
+// calendar styles
+.cal-month-view {
+	.cal-day-cell {
+		&.cal-today {
+			background-color: #ebebeb;
+
+			.cal-day-number {
+				font: {
+					size: 18px;
+					weight: 600;
+				}
+			}
+		}
+
+		&.cal-open {
+			background-color: rgba(0, 90, 172, 0.05);
+		}
+	}
+
+	.cal-cell.cal-has-events.cal-open {
+		background-color: rgba(0, 90, 172, 0.05) !important;
+	}
+}
+
+mwl-calendar-month-view {
+	.cal-month-view {
+		.cal-days {
+			border-right: 0 !important;
+			border-left: 0 !important;
+		}
+	}
+}
+
+mwl-calendar-month-view-header {
+	.cal-header {
+		background: rgba(0, 90, 172, 0.05);
+		border-bottom: 1px solid #dce6f3;
+
+		.cal-cell {
+			font-size: 12px;
+			font-weight: 600;
+			color: #1e1e1e;
+			background: transparent;
+			padding: 8px 0;
+		}
+	}
+}
+
+mwl-calendar-month-cell {
+	min-height: auto !important;
+
+	&:not(:last-child) {
+		border-right: none !important;
+	}
+
+	.cal-cell-top {
+		min-height: auto !important;
+	}
+}
+
+// button
+.app-btn {
+	width: 100%;
+	/* border: 1px solid #eee; */
+	display: flex;
+	justify-content: space-start;
+	align-items: center;
+	padding: 4px 8px 4px 0;
+	background: #fff;
+	border: none;
+}
+
+// //ion-item
+// ion-item {
+//   --padding-start: 0;
+// }
+
+ion-header.modal-header,
+app-header.modal-header .main-header {
+	border-bottom: 1px solid #dce6f3;
+}
+
+.header-spacer {
+	display: inline-block;
+	width: 32px;
+	height: 32px;
+}
+
+.app-hide {
+	display: none !important;
+}
+
+.app-calendar__title {
+	margin: 0;
+}
+
+app-input {
+	width: 100%;
+}
+
+ion-modal.ion-datetime-button-overlay,
+ion-modal.datetime-modal,
+ion-modal.ion-datetime-modal,
+ion-popover.ion-datetime-button-overlay,
+ion-popover.datetime-modal,
+ion-popover.ion-datetime-modal {
+	--backdrop-opacity: 0.45;
+	--backdrop-background: #000;
+}
+
+ion-modal.group-date-modal,
+ion-popover.group-date-modal {
+	--backdrop-opacity: 0.45;
+	--backdrop-background: #000;
+}
+
+ion-modal.ion-datetime-button-overlay::part(backdrop),
+ion-modal.datetime-modal::part(backdrop),
+ion-modal.ion-datetime-modal::part(backdrop),
+ion-popover.ion-datetime-button-overlay::part(backdrop),
+ion-popover.datetime-modal::part(backdrop),
+ion-popover.ion-datetime-modal::part(backdrop) {
+	background: var(--backdrop-background, #000);
+	opacity: var(--backdrop-opacity, 0.45);
+}
+
+ion-modal.group-date-modal::part(backdrop),
+ion-popover.group-date-modal::part(backdrop) {
+	background: var(--backdrop-background, #000);
+	opacity: var(--backdrop-opacity, 0.45);
+}
+
+ion-header.main-header {
+	box-shadow: none !important;
+	--box-shadow: none !important;
+	border: 0 !important;
+}
+
+/* In md kommt der Shadow oft über ::after */
+ion-header.main-header::after {
+	background-image: none !important;
+}

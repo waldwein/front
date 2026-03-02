@@ -1,0 +1,23 @@
+<div class="admin-login">
+  <ion-card class="admin-login__card">
+    <ion-card-header>
+      <ion-card-title [innerHTML]="'admin_login_title' | translate"></ion-card-title>
+      <ion-card-subtitle [innerHTML]="'admin_login_subtitle' | translate"></ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <form class="admin-login__form" (ngSubmit)="onSubmit()">
+        <ion-item lines="full">
+          <ion-label position="stacked" [innerHTML]="'admin_email' | translate"></ion-label>
+          <ion-input [(ngModel)]="email" name="email" autocomplete="email" inputmode="text" required></ion-input>
+        </ion-item>
+        <ion-item lines="full">
+          <ion-label position="stacked" [innerHTML]="'admin_password' | translate"></ion-label>
+          <ion-input [(ngModel)]="password" name="password" type="password" autocomplete="current-password" required></ion-input>
+        </ion-item>
+        <ion-button class="admin-login__submit" expand="block" type="submit" [disabled]="!email || !password">
+          <ion-label [innerHTML]="'admin_login_cta' | translate"></ion-label>
+        </ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</div>

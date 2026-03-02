@@ -1,0 +1,248 @@
+ion-content {
+	--background: #f7f9fc;
+	--padding-bottom: 0;
+}
+
+app-header h5 {
+	margin: 0;
+}
+
+.app-grid__container {
+	// width: min(100%, 776px);
+	// --home-card-size: 316px;
+	--home-gap: 12px;
+	margin: 0 auto;
+	padding: 8px 6px 12px;
+
+	.grid-flex {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: var(--home-gap);
+	}
+
+	.grid-item {
+		flex: 0 1 var(--home-card-size);
+		max-width: var(--home-card-size);
+	}
+
+	.card-link {
+		display: block;
+		width: min(100%, var(--home-card-size));
+		text-decoration: none;
+		color: inherit;
+	}
+
+	.grid-card {
+		width: min(100%, var(--home-card-size));
+		aspect-ratio: 1 / 1;
+		margin: 0;
+		display: flex;
+		align-items: stretch;
+		overflow: hidden;
+		padding: 0;
+		border-radius: 16px;
+		border: 1px solid #dce6f3;
+		box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+		background: #ffffff;
+		transition:
+			transform 0.18s ease,
+			box-shadow 0.18s ease;
+	}
+
+	.grid-card.clickable {
+		cursor: pointer;
+	}
+
+	.grid-card.clickable:hover,
+	.grid-card.clickable:focus-visible,
+	.card-link:hover .grid-card,
+	.card-link:focus-visible .grid-card {
+		transform: translateY(-2px);
+		box-shadow: 0 10px 22px rgba(0, 0, 0, 0.1);
+	}
+
+	.grid-card.clickable:active,
+	.card-link:active .grid-card {
+		transform: translateY(0);
+	}
+
+	.card-image {
+		display: block;
+		width: 100%;
+		height: 100%;
+
+		&::part(image) {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+
+	.placeholder-card {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		padding: 14px;
+		overflow: hidden;
+		isolation: isolate;
+		border-radius: 14px;
+		border: 1px solid #dce6f3;
+		background: linear-gradient(165deg, #f8fbff 0%, #edf3fb 100%);
+
+		&::after {
+			content: "";
+			position: absolute;
+			inset: 7px;
+			border-radius: 10px;
+			border: 1px solid rgba(0, 90, 172, 0.06);
+			pointer-events: none;
+		}
+	}
+
+	.placeholder-pattern {
+		position: absolute;
+		inset: 0;
+		z-index: -2;
+		background-image:
+			linear-gradient(135deg, rgba(0, 90, 172, 0.04) 0%, rgba(0, 90, 172, 0) 65%),
+			repeating-linear-gradient(0deg, rgba(0, 90, 172, 0.04) 0, rgba(0, 90, 172, 0.04) 1px, transparent 1px, transparent 14px),
+			repeating-linear-gradient(90deg, rgba(0, 90, 172, 0.035) 0, rgba(0, 90, 172, 0.035) 1px, transparent 1px, transparent 14px);
+		opacity: 0.55;
+	}
+
+	.placeholder-label {
+		margin: 0;
+		max-width: 142px;
+		color: #2d3f5f;
+		font-size: 13px;
+		font-weight: 700;
+		line-height: 1.25;
+		text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
+		white-space: normal;
+		word-break: break-word;
+	}
+
+	.tone-a {
+		background: linear-gradient(165deg, #f8fbff 0%, #edf3fb 100%);
+	}
+
+	.tone-b {
+		background: linear-gradient(165deg, #f7f9fc 0%, #eaf0f7 100%);
+	}
+
+	.tone-c {
+		background: linear-gradient(165deg, #f3f7fc 0%, #e5edf8 100%);
+	}
+
+	.tone-d {
+		background: linear-gradient(165deg, #f7f9fc 0%, #e8eef7 100%);
+	}
+
+	.tone-e {
+		background: linear-gradient(165deg, #f5f8fd 0%, #e6edf8 100%);
+	}
+
+	.tone-f {
+		background: linear-gradient(165deg, #f4f7fb 0%, #e4ebf5 100%);
+	}
+
+	@media (min-width: 1367px) {
+		width: min(100%, 1040px);
+	}
+
+	@media (min-width: 1025px) and (max-width: 1366px) {
+		--home-card-size: 256px;
+		--home-gap: 4vmin;
+	}
+
+	@media (min-width: 768px) and (max-width: 1024px) {
+		// width: min(100%, 860px);
+		// --home-card-size: clamp(210px, calc((100dvh - 180px) / 3), 260px);
+		--home-card-size: 216px;
+		--home-gap: 4vmin;
+		padding: 12px 10px 16px;
+
+		.grid-card {
+			border-radius: 18px;
+		}
+
+		.placeholder-card {
+			padding: 18px;
+		}
+
+		.placeholder-label {
+			max-width: 178px;
+			font-size: 16px;
+			line-height: 1.3;
+		}
+	}
+
+	// iPad Pro in portrait
+	@media (orientation: portrait) and (min-width: 1024px) {
+		--home-card-size: 208px;
+		--home-gap: 3.2vmin;
+	}
+	// iPad Air in portrait
+	@media (orientation: portrait) and (min-width: 820px) and (max-width: 1023px) {
+		--home-card-size: 238px;
+		--home-gap: 3.6vmin;
+		padding: 12px 12px 18px;
+	}
+
+	// iPad mini in portrait
+	@media (orientation: portrait) and (min-width: 720px) and (max-width: 819px) {
+		--home-card-size: 228px;
+		--home-gap: 3.2vmin;
+		padding: 12px 10px 16px;
+	}
+
+	@media (orientation: portrait) and (min-width: 540px) and (max-width: 719px) {
+		--home-card-size: 158px;
+		--home-gap: 3.2vmin;
+	}
+
+	// smartphones in portrait
+	@media (orientation: portrait) and (min-width: 390px) and (max-width: 539px) {
+		--home-card-size: 172px;
+		--home-gap: 3.2vmin;
+	}
+
+	@media (orientation: portrait) and (max-width: 389px) {
+		--home-card-size: 158px;
+		--home-gap: 3.2vmin;
+	}
+
+	@media (orientation: portrait) and (max-width: 350px) {
+		--home-card-size: 148px;
+		--home-gap: 3.2vmin;
+	}
+
+	// iPad Pro in landscape
+	@media (orientation: landscape) and (min-width: 1366px) {
+		--home-card-size: 308px;
+		--home-gap: 3.8vmin;
+	}
+
+	// iPad Air in landscape
+	@media (orientation: landscape) and (min-width: 1080px) and (max-width: 1365px) {
+		--home-card-size: 258px;
+		--home-gap: 3.8vmin;
+	}
+
+	// iPad mini in landscape
+	@media (orientation: landscape) and (min-width: 1024px) and (max-width: 1079px) {
+		--home-card-size: 212px;
+		--home-gap: 3.8vmin;
+	}
+}
+@media (min-width: 1024px) {
+	.left-header-btn,
+	.right-header-btn {
+		display: none;
+	}
+}

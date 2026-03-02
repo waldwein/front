@@ -1,0 +1,116 @@
+<ion-app>
+	<app-header>
+		<div headerLeft class="btn-container left-header-btn">
+			<ion-button class="menu-trigger" size="small" fill="clear" color="dark" (click)="openMainMenu()">
+				<ion-icon slot="icon-only" name="menu"></ion-icon>
+			</ion-button>
+		</div>
+		<h5 headerCenter [innerHTML]="'narcotics' | translate"></h5>
+		<div headerBottom class="catalog-search">
+			<app-search-bar (searchChange)="onSearch($event)"></app-search-bar>
+		</div>
+		<ion-button
+			headerRight
+			class="home-trigger right-header-btn"
+			size="small"
+			fill="clear"
+			color="dark"
+			routerLink="/"
+			routerDirection="root"
+			[attr.aria-label]="'home_lable' | translate"
+		>
+			<ion-icon slot="icon-only" name="home-outline"></ion-icon>
+		</ion-button>
+	</app-header>
+
+	<ion-content [fullscreen]="true">
+		<ion-refresher slot="fixed" (ionRefresh)="loadItems($event)">
+			<ion-refresher-content></ion-refresher-content>
+		</ion-refresher>
+
+		<div class="state" *ngIf="isLoading">
+			<ion-spinner name="crescent"></ion-spinner>
+		</div>
+
+		<ion-card class="error-card" *ngIf="loadError">
+			<ion-card-header>
+				<ion-card-title [innerHTML]="'error_title' | translate"></ion-card-title>
+			</ion-card-header>
+			<ion-card-content>{{ loadError | translate }}</ion-card-content>
+		</ion-card>
+
+		<div class="narcotics-list" *ngIf="!isLoading && filteredItems.length">
+			<ion-list>
+				<ion-item class="narcotics-row" *ngFor="let item of filteredItems; trackBy: trackByItem" lines="full" button (click)="openItemModal(item)">
+					<div class="narcotics-thumb" slot="start">
+						<img [src]="getListImage(item)" [alt]="getItemName(item) || ('narcotics' | translate)" (error)="onImageError($event)" />
+					</div>
+					<ion-label>
+						<h3 class="narcotics-title">{{ getItemName(item) || ('narcotics' | translate) }}</h3>
+						<!-- <p class="narcotics-meta" *ngIf="item.time_stamp">{{ item.time_stamp }}</p> -->
+					</ion-label>
+				</ion-item>
+			</ion-list>
+		</div>
+
+		<ion-item class="empty-state" *ngIf="!isLoading && !filteredItems.length && !loadError">
+			<ion-label [innerHTML]="'no_entries_found' | translate"></ion-label>
+		</ion-item>
+
+		<ion-modal
+			class="narcotics-modal"
+			[isOpen]="itemModalOpen"
+			[enterAnimation]="modalEnterAnimation"
+			[leaveAnimation]="modalLeaveAnimation"
+			(didDismiss)="closeItemModal()"
+		>
+			<ng-template>
+				<app-header class="modal-header">
+					<ion-button headerLeft fill="clear" color="dark" (click)="closeItemModal()">
+						<ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+					</ion-button>
+					<h5 headerCenter class="app-calendar__title" [innerHTML]="'detail_view' | translate"></h5>
+				</app-header>
+
+				<ion-content class="narcotics-detail">
+					<ion-card *ngIf="selectedItem as item" class="narcotics-card">
+						<ion-card-header>
+							<div class="header-row">
+								<div class="detail-image">
+									<img [src]="getDetailImage(item)" [alt]="getItemName(item) || ('narcotics' | translate)" (error)="onImageError($event)" />
+								</div>
+								<div class="header-text">
+									<ion-card-title class="narcotics-text">{{ getItemName(item) || ('narcotics' | translate) }}</ion-card-title>
+									<!-- <p class="narcotics-meta" *ngIf="item.time_stamp">{{ item.time_stamp }}</p> -->
+								</div>
+							</div>
+						</ion-card-header>
+
+						<ion-card-content>
+							<ion-accordion-group class="narcotics-sections" *ngIf="selectedSections.length">
+								<ion-accordion
+									class="narcotics-section"
+									*ngFor="let section of selectedSections; trackBy: trackBySection"
+									[value]="section.title"
+								>
+									<ion-item slot="header" lines="full">
+										<ion-label>
+											<h2>{{ section.title }}</h2>
+										</ion-label>
+									</ion-item>
+									<div slot="content" class="section-content">
+										<div class="paragraph ion-text-wrap" [innerHTML]="section.content"></div>
+									</div>
+								</ion-accordion>
+							</ion-accordion-group>
+
+							<ion-item class="empty-state" *ngIf="!selectedSections.length">
+								<ion-label [innerHTML]="'no_details_available' | translate"></ion-label>
+							</ion-item>
+						</ion-card-content>
+					</ion-card>
+				</ion-content>
+			</ng-template>
+		</ion-modal>
+	</ion-content>
+</ion-app>

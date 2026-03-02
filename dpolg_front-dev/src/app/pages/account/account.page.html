@@ -1,0 +1,80 @@
+<ion-app class="account-page" id="account-content">
+	<app-header>
+		<div headerLeft class="btn-container left-header-btn">
+			<ion-button class="menu-trigger" size="small" fill="clear" color="dark" (click)="openMainMenu()">
+				<ion-icon slot="icon-only" name="menu"></ion-icon>
+			</ion-button>
+		</div>
+		<h5 headerCenter class="app-calendar__title" [innerHTML]="'admin_panel' | translate"></h5>
+		<ion-button
+			headerRight
+			class="home-trigger right-header-btn"
+			size="small"
+			fill="clear"
+			color="dark"
+			routerLink="/"
+			routerDirection="root"
+			[attr.aria-label]="'home_lable' | translate"
+		>
+			<ion-icon slot="icon-only" name="home-outline"></ion-icon>
+		</ion-button>
+	</app-header>
+
+	<ion-content [fullscreen]="true">
+		<ng-container *ngIf="isAdminLoginRequired; else adminArea">
+			<app-login (loginSuccess)="onAdminLoginSuccess()"></app-login>
+		</ng-container>
+		<ng-template #adminArea>
+			<div class="action-container">
+				<section class="action-panel">
+					<ion-button class="action-button" expand="block" fill="outline" (click)="openServiceplanTemplatesModal()">
+						<span class="action-start" slot="start">
+							<ion-icon name="list-outline"></ion-icon>
+						</span>
+						<ion-label class="action-label" [innerHTML]="'plan_templates_to_check' | translate"></ion-label>
+						<ion-icon class="action-end" name="chevron-forward" slot="end"></ion-icon>
+					</ion-button>
+					<ion-button class="action-button" expand="block" fill="outline" (click)="openPublishedPlansModal()">
+						<span class="action-start" slot="start">
+							<ion-icon name="globe-outline"></ion-icon>
+						</span>
+						<ion-label class="action-label" [innerHTML]="'admin_published_plans' | translate"></ion-label>
+						<ion-icon class="action-end" name="chevron-forward" slot="end"></ion-icon>
+					</ion-button>
+				</section>
+			</div>
+		</ng-template>
+	</ion-content>
+</ion-app>
+
+<ion-modal
+	class="account-modal"
+	[isOpen]="serviceplanTemplatesModalState"
+	[enterAnimation]="modalEnterAnimation"
+	[leaveAnimation]="modalLeaveAnimation"
+	(didDismiss)="closeServiceplanTemplatesModal()"
+>
+	<ng-template #servicePlanTemplate>
+		<ion-content>
+			<app-serviceplan-to-check
+				(modalState)="closeServiceplanTemplatesModal()"
+				(plansChanged)="onReviewPlansChanged($event)"
+				[planTemplates]="notValidPlans"
+			></app-serviceplan-to-check>
+		</ion-content>
+	</ng-template>
+</ion-modal>
+
+<ion-modal
+	class="account-modal"
+	[isOpen]="publishedPlansModalState"
+	[enterAnimation]="modalEnterAnimation"
+	[leaveAnimation]="modalLeaveAnimation"
+	(didDismiss)="closePublishedPlansModal()"
+>
+	<ng-template #publishedPlansTemplate>
+		<ion-content>
+			<app-serviceplan-select (modalState)="closePublishedPlansModal()" [adminMode]="true"></app-serviceplan-select>
+		</ion-content>
+	</ng-template>
+</ion-modal>

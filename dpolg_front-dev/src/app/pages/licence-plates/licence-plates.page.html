@@ -1,0 +1,119 @@
+<ion-app>
+	<app-header>
+		<div headerLeft class="btn-container left-header-btn">
+			<ion-button class="menu-trigger" size="small" fill="clear" color="dark" (click)="openMainMenu()">
+				<ion-icon slot="icon-only" name="menu"></ion-icon>
+			</ion-button>
+		</div>
+		<h5 headerCenter [innerHTML]="'licence_plates' | translate"></h5>
+		<div headerBottom class="catalog-search">
+			<app-search-bar (searchChange)="onSearch($event)"></app-search-bar>
+		</div>
+		<ion-button
+			headerRight
+			class="home-trigger right-header-btn"
+			size="small"
+			fill="clear"
+			color="dark"
+			routerLink="/"
+			routerDirection="root"
+			[attr.aria-label]="'home_lable' | translate"
+		>
+			<ion-icon slot="icon-only" name="home-outline"></ion-icon>
+		</ion-button>
+	</app-header>
+
+	<ion-content [fullscreen]="true">
+		<ion-refresher slot="fixed" (ionRefresh)="loadPlates($event)">
+			<ion-refresher-content></ion-refresher-content>
+		</ion-refresher>
+
+		<div class="state" *ngIf="isLoading">
+			<ion-spinner name="crescent"></ion-spinner>
+		</div>
+
+		<ion-card class="error-card" *ngIf="loadError">
+			<ion-card-header>
+				<ion-card-title [innerHTML]="'error_title' | translate"></ion-card-title>
+			</ion-card-header>
+			<ion-card-content>{{ loadError }}</ion-card-content>
+		</ion-card>
+
+		<ion-accordion-group class="plate-accordion" *ngIf="!isLoading && platesByCategory.length">
+			<ion-accordion class="plate-category" *ngFor="let group of platesByCategory; trackBy: trackByCategory" [value]="group.category">
+				<ion-item slot="header" lines="full" class="sticky-accordion-header">
+					<ion-label>
+						<h2>{{ group.category }}</h2>
+						<p>{{ group.items.length }} {{ 'entries' | translate }}</p>
+					</ion-label>
+				</ion-item>
+				<div slot="content" class="category-content">
+					<ion-list>
+						<ion-item
+							class="plate-row"
+							*ngFor="let plate of group.items; trackBy: trackByPlate"
+							lines="full"
+							button
+							(click)="openPlateModal(plate)"
+						>
+							<div class="plate-badge" slot="start">{{ getPlateName(plate) }}</div>
+							<ion-label>
+								<h3 class="plate-title">{{ getCity(plate) || ('unknown_place' | translate) }}</h3>
+								<p *ngIf="plate.bundesland">{{ plate.bundesland }}</p>
+							</ion-label>
+						</ion-item>
+					</ion-list>
+				</div>
+			</ion-accordion>
+		</ion-accordion-group>
+
+		<ion-item class="empty-state" *ngIf="!isLoading && !platesByCategory.length && !loadError">
+			<ion-label [innerHTML]="'no_entries_found' | translate"></ion-label>
+		</ion-item>
+
+		<ion-modal
+			class="plate-modal"
+			[isOpen]="plateModalOpen"
+			[enterAnimation]="modalEnterAnimation"
+			[leaveAnimation]="modalLeaveAnimation"
+			(didDismiss)="closePlateModal()"
+		>
+			<ng-template>
+				<app-header class="modal-header">
+					<ion-button headerLeft fill="clear" color="dark" (click)="closePlateModal()">
+						<ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+					</ion-button>
+					<h5 headerCenter class="app-calendar__title" [innerHTML]="'detail_view' | translate"></h5>
+				</app-header>
+
+				<ion-content class="plate-detail">
+					<ion-card *ngIf="selectedPlate as plate" class="plate-card">
+						<ion-card-header>
+							<div class="header-row">
+								<div class="plate-display">{{ getPlateName(plate) || ('licence_plate' | translate) }}</div>
+								<ion-card-title class="plate-text"> {{ getCity(plate) || ('unknown_place' | translate) }} </ion-card-title>
+								<p class="plate-meta" *ngIf="plate.bundesland">{{ plate.bundesland }}</p>
+							</div>
+						</ion-card-header>
+
+						<!-- <ion-card-content>
+							<div class="section">
+								<div class="section-title" [innerHTML]="'info' | translate"></div>
+								<ion-list lines="none">
+									<ion-item class="kv" *ngIf="plate.bundesland">
+										<ion-label [innerHTML]="'federal_state' | translate"></ion-label>
+										<div class="props" slot="end">{{ plate.bundesland }}</div>
+									</ion-item>
+									<ion-item class="kv" *ngIf="plate.time_stamp">
+										<ion-label [innerHTML]="'timestamp' | translate"></ion-label>
+										<div class="props" slot="end">{{ plate.time_stamp }}</div>
+									</ion-item>
+								</ion-list>
+							</div>
+						</ion-card-content> -->
+					</ion-card>
+				</ion-content>
+			</ng-template>
+		</ion-modal>
+	</ion-content>
+</ion-app>

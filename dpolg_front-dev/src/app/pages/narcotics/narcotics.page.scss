@@ -1,0 +1,260 @@
+ion-content {
+	--background: #f7f9fc;
+	--padding-start: 12px;
+	--padding-end: 12px;
+}
+
+:host ::ng-deep app-search-bar ion-searchbar {
+	--background: #ffffff;
+	--border-radius: 12px;
+	--box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+	--color: #2d3f5f;
+	--placeholder-color: #6f7f98;
+	--icon-color: #4a6aa8;
+	--clear-button-color: #4a6aa8;
+	padding-left: 4px;
+	padding-right: 4px;
+	margin: 0;
+}
+
+.state {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 24px 0;
+
+	ion-spinner {
+		width: 30px;
+		height: 30px;
+		color: #005aac;
+	}
+}
+
+.error-card {
+	margin: 12px 0;
+	border: 1px solid #dce6f3;
+	border-radius: 12px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.narcotics-list {
+	margin-top: 12px;
+	border: 1px solid #dce6f3;
+	border-radius: 12px;
+	background: #ffffff;
+	overflow: hidden;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.narcotics-list ion-list {
+	padding: 0;
+	background: transparent;
+}
+
+.narcotics-row {
+	--background: #ffffff;
+	--padding-start: 12px;
+	--inner-padding-end: 12px;
+	--min-height: 68px;
+	--border-color: #edf1f6;
+
+	ion-label {
+		margin: 10px 0;
+	}
+
+	p {
+		margin: 4px 0 0;
+		font-size: 0.85rem;
+		line-height: 1.35;
+		color: #6f7f98;
+	}
+}
+
+.narcotics-thumb {
+	width: 46px;
+	height: 46px;
+	border-radius: 12px;
+	background: #f1f5fb;
+	border: 1px solid #dce6f3;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+
+	img {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+		display: block;
+	}
+}
+
+.narcotics-title {
+	margin: 0;
+	font-size: 0.95rem;
+	font-weight: 700;
+	color: #2d3f5f;
+}
+
+.narcotics-meta {
+	display: block;
+}
+
+.empty-state {
+	margin-top: 12px;
+	border: 1px solid #dce6f3;
+	border-radius: 12px;
+	--background: #ffffff;
+	--color: #2d3f5f;
+	--padding-start: 12px;
+	--inner-padding-end: 12px;
+}
+
+ion-modal.narcotics-modal {
+	--width: 100%;
+	--height: 100%;
+	--border-radius: 0;
+	--background: #f7f9fc;
+}
+
+@media (min-width: 1024px) {
+	ion-modal.narcotics-modal {
+		--width: calc(100% - var(--app-side-width));
+		--max-width: calc(100% - var(--app-side-width));
+		align-items: stretch;
+		justify-content: flex-start;
+	}
+
+	ion-modal.narcotics-modal::part(content) {
+		margin-left: var(--app-side-width);
+		height: 100%;
+	}
+
+	ion-modal.narcotics-modal::part(backdrop) {
+		left: var(--app-side-width);
+		width: calc(100% - var(--app-side-width));
+	}
+}
+
+@media (min-width: 1868px) {
+	ion-modal.narcotics-modal {
+		--width: calc(var(--app-shell-max-width) - var(--app-side-width));
+		--max-width: calc(var(--app-shell-max-width) - var(--app-side-width));
+	}
+
+	ion-modal.narcotics-modal::part(content) {
+		margin-left: calc((100vw - var(--app-shell-max-width)) / 2 + var(--app-side-width));
+	}
+
+	ion-modal.narcotics-modal::part(backdrop) {
+		left: calc((100vw - var(--app-shell-max-width)) / 2 + var(--app-side-width));
+		width: calc(var(--app-shell-max-width) - var(--app-side-width));
+	}
+}
+
+.narcotics-detail {
+	--background: #f7f9fc;
+	--padding-top: 12px;
+	--padding-bottom: 20px;
+	--padding-start: 12px;
+	--padding-end: 12px;
+}
+
+.narcotics-card {
+	margin: 12px 0 20px;
+	border: 1px solid #dce6f3;
+	border-radius: 14px;
+	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+}
+
+.header-row {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	align-items: center;
+	text-align: center;
+}
+
+.detail-image {
+	border-radius: 16px;
+	background: #eef5ff;
+	border: 1px solid #dce6f3;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+
+	img {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+		display: block;
+	}
+}
+
+.header-text {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.narcotics-text {
+	margin: 0;
+	font-size: 1rem;
+	line-height: 1.35;
+	font-weight: 700;
+	color: #2d3f5f;
+}
+
+.narcotics-sections {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+ion-accordion.narcotics-section {
+	border: 1px solid #dce6f3;
+	border-radius: 12px;
+	background: #ffffff;
+	overflow: hidden;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+
+	&.accordion-expanded {
+		overflow: visible;
+	}
+}
+
+ion-accordion.narcotics-section > ion-item[slot='header'] {
+	--background: #eef5ff;
+	--color: #2d3f5f;
+	--border-color: #dce6f3;
+	--min-height: 52px;
+	--padding-start: 12px;
+	--inner-padding-end: 12px;
+
+	h2 {
+		margin: 0;
+		font-size: 0.92rem;
+		font-weight: 700;
+		color: #2d3f5f;
+	}
+}
+
+.section-content {
+	padding: 12px;
+	background: #ffffff;
+}
+
+.paragraph {
+	white-space: pre-line;
+	font-size: 0.95rem;
+	line-height: 1.45;
+	color: #2d3f5f;
+}
+
+@media (min-width: 1024px) {
+	.left-header-btn,
+	.right-header-btn {
+		display: none;
+	}
+}

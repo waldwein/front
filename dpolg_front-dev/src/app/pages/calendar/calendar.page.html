@@ -1,0 +1,228 @@
+<ion-modal
+	[isOpen]="settingsMenuOpen"
+	cssClass="settings-modal"
+	[enterAnimation]="modalEnterAnimation"
+	[leaveAnimation]="modalLeaveAnimation"
+	(didDismiss)="onSettingsMenuDidClose()"
+>
+	<ng-template>
+		<app-header class="settings-menu__header">
+			<div headerLeft class="btn-container">
+				<ion-button size="small" fill="clear" color="dark" (click)="onSettingsMenuDidClose()">
+					<ion-icon slot="icon-only" name="close"></ion-icon>
+				</ion-button>
+			</div>
+			<div headerCenter class="container">
+				<h5 class="menu-settings__title" [innerHTML]="'settings'|translate"></h5>
+			</div>
+		</app-header>
+
+		<ion-content class="settings-menu-content">
+			<div class="ion-padding app-menu_container">
+				<div class="container menu-actions">
+					<ion-button class="settings-action" (click)="setShiftplanModal(true)" expand="block" fill="outline">
+						<ion-icon slot="start" name="log-in-outline"></ion-icon>
+						<ion-label class="action-label" [innerHTML]="'serviceplan_join'|translate"></ion-label>
+						<ion-icon slot="end" name="chevron-forward"></ion-icon>
+					</ion-button>
+
+					<ion-button class="settings-action" expand="block" fill="outline" (click)="openCreateServicePlan()">
+						<ion-icon slot="start" name="add-circle-outline"></ion-icon>
+						<ion-label class="action-label" [innerHTML]="'serviceplan_create'|translate"></ion-label>
+						<ion-icon slot="end" name="chevron-forward"></ion-icon>
+					</ion-button>
+
+					<ion-button class="settings-action" expand="block" fill="outline" (click)="editServicePlan()" [disabled]="!hasActivePlan">
+						<ion-icon slot="start" name="create-outline"></ion-icon>
+						<ion-label class="action-label" [innerHTML]="'serviceplan_edit'|translate"></ion-label>
+						<ion-icon slot="end" name="chevron-forward"></ion-icon>
+					</ion-button>
+				</div>
+
+				<div class="settings-help">
+					<ion-item lines="none" button detail="false" (click)="toggleSettingsHint('join')">
+						<ion-icon slot="start" name="help-circle-outline"></ion-icon>
+						<ion-label [innerHTML]="'serviceplan_join'|translate"></ion-label>
+						<ion-icon slot="end" [name]="settingsHints.join ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+					</ion-item>
+					<ion-item lines="none" button detail="false" (click)="toggleSettingsHint('create')">
+						<ion-icon slot="start" name="help-circle-outline"></ion-icon>
+						<ion-label [innerHTML]="'serviceplan_create'|translate"></ion-label>
+						<ion-icon slot="end" [name]="settingsHints.create ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+					</ion-item>
+					<ion-item lines="none" button detail="false" (click)="toggleSettingsHint('edit')">
+						<ion-icon slot="start" name="help-circle-outline"></ion-icon>
+						<ion-label [innerHTML]="'serviceplan_edit'|translate"></ion-label>
+						<ion-icon slot="end" [name]="settingsHints.edit ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+					</ion-item>
+				</div>
+
+				<div class="settings-hints_container">
+					<div class="settings-hint" *ngIf="settingsHints.join">
+						<ion-icon name="information-circle-outline"></ion-icon>
+						<ion-label class="ion-text-wrap">
+							<span [innerHTML]="'settings_join_hint' | translate"></span>
+						</ion-label>
+					</div>
+
+					<div class="settings-hint" *ngIf="settingsHints.edit">
+						<ion-icon name="information-circle-outline"></ion-icon>
+						<ion-label class="ion-text-wrap">
+							<span [innerHTML]="'settings_edit_hint' | translate"></span>
+						</ion-label>
+					</div>
+					<div class="settings-hint" *ngIf="settingsHints.create">
+						<ion-icon name="information-circle-outline"></ion-icon>
+						<ion-label class="ion-text-wrap">
+							<span [innerHTML]="'settings_create_hint' | translate"></span>
+						</ion-label>
+					</div>
+				</div>
+			</div>
+		</ion-content>
+	</ng-template>
+</ion-modal>
+<!-- side settings menu !!! END !!! -->
+
+<ion-modal [isOpen]="shiftplanModalState" [enterAnimation]="modalEnterAnimation" [leaveAnimation]="modalLeaveAnimation" (didDismiss)="closeShiftplanModal()">
+	<ng-template>
+		<app-serviceplan-select (modalState)="closeShiftplanModal()"></app-serviceplan-select>
+	</ng-template>
+</ion-modal>
+
+<ion-modal
+	[isOpen]="createServiceModalState"
+	[enterAnimation]="modalEnterAnimation"
+	[leaveAnimation]="modalLeaveAnimation"
+	(didDismiss)="closeCreteServiceModal()"
+>
+	<ng-template>
+		<app-serviceplan-create [editPlan]="editPlanDraft" (modalState)="closeCreteServiceModal()"></app-serviceplan-create>
+	</ng-template>
+</ion-modal>
+
+<!-- main application -->
+<div class="app-page" id="calendar-content">
+	<app-header class="multi-actions">
+		<div headerLeft class="btn-container left-header-btn">
+			<ion-button class="menu-trigger" size="small" fill="clear" color="dark" (click)="openMainMenu()">
+				<ion-icon slot="icon-only" name="menu"></ion-icon>
+			</ion-button>
+		</div>
+		<h5 headerCenter class="app-calendar__title" [innerHTML]="(viewData.month_formatted|translate) + ' ' + viewData.year"></h5>
+		<div headerRight class="header-actions">
+			<ion-button size="small" fill="clear" color="dark" (click)="update()" [attr.aria-label]="'info' | translate">
+				<img class="header-icon" src="assets/img/icon.png" [attr.alt]="'info' | translate" />
+			</ion-button>
+		</div>
+	</app-header>
+
+	<div class="calendar-wrapper">
+		<mwl-calendar-month-view
+			[viewDate]="viewDate"
+			[events]="events"
+			[cellTemplate]="customCellTemplate"
+			[headerTemplate]="customHeaderTemplate"
+			(dayClicked)="dayClicked($event)"
+			(eventClicked)="handleEventClick('clicked', $event)"
+			[weekStartsOn]="1"
+			day-view-segment-size="40"
+		></mwl-calendar-month-view>
+
+		<div class="current">
+			<div class="event-list-container">
+				<div class="event-item" *ngFor="let event of currentEvents; let i = index">
+					<div class="event-main">
+						<!-- <ion-icon name="today-outline" slot="start" size="small"></ion-icon> -->
+						<span [innerHTML]="event.groupName" class="groupName"></span>
+						<span class="separator">:</span>
+						<span [innerHTML]="event.title" class="title"></span>
+						<span class="desc-pill" *ngIf="isEventInfoOpen(i) && hasEventDescription(event)"> {{ getEventDescriptionLabel(event) }} </span>
+					</div>
+
+					<ion-button
+						class="info-button"
+						fill="clear"
+						size="small"
+						(click)="toggleEventInfo(i)"
+						*ngIf="hasEventDescription(event)"
+						[class.is-open]="isEventInfoOpen(i)"
+					>
+						<ion-icon name="information-circle-outline" slot="icon-only" size="small"></ion-icon>
+					</ion-button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- custom header -->
+	<ng-template #customHeaderTemplate let-days="days">
+		<div class="cal-cell-row cal-header" role="row">
+			<div class="cal-cell" *ngFor="let day of weekDays" role="columnheader">{{ day }}</div>
+		</div>
+	</ng-template>
+
+	<!-- custom monthcell -->
+	<ng-template #customCellTemplate let-day="day" let-locale="locale">
+		<div class="custom-cell" [class.is-selected]="isSelectedDay(day)">
+			<div class="cell-top" [attr.aria-label]="{ day: day, locale: locale } | calendarA11y : 'monthCell'">
+				<span class="cal-day-number">{{ day.date | calendarDate : "monthViewDayNumber" : locale }}</span>
+			</div>
+
+			<!-- <div class="container"> -->
+			<div class="event-container" *ngIf="!!day.events">
+				<div class="event-item" *ngFor="let event of day.events">
+					<div class="event-wrapper">
+						<!-- <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span> -->
+						<span [innerHTML]="event.title" class="event-text"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- </div> -->
+	</ng-template>
+
+	<ion-alert
+		[isOpen]="alertState"
+		header="Kein Dienstplan ausgewählt"
+		message="Möchtest Du Deinen Dienstplan festlegen?"
+		[buttons]="alertButtons"
+		(didDismiss)="setAlertState(false)"
+	></ion-alert>
+
+	<div class="footer">
+		<div class="footer_container">
+			<div class="item">
+				<div class="btn-container">
+					<ion-button fill="clear" color="dark" (click)="setTodayBtnState(true)">
+						<ion-icon slot="icon-only" name="today-outline"></ion-icon>
+					</ion-button>
+				</div>
+			</div>
+
+			<div class="item">
+				<div class="btn-container">
+					<ion-button fill="clear" color="dark" (click)="back()">
+						<ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+					</ion-button>
+				</div>
+			</div>
+
+			<div class="item">
+				<div class="btn-container">
+					<ion-button fill="clear" color="dark" (click)="next()">
+						<ion-icon name="arrow-forward" slot="icon-only"></ion-icon>
+					</ion-button>
+				</div>
+			</div>
+
+			<div class="item">
+				<div class="btn-container">
+					<ion-button fill="clear" color="dark" size="small" (click)="openSettingsMenu()">
+						<ion-icon name="settings"></ion-icon>
+					</ion-button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

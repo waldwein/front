@@ -1,0 +1,94 @@
+ion-content {
+	--background: #f7f9fc;
+	--padding-start: 12px;
+	--padding-end: 12px;
+}
+
+.container {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.hu-card,
+.info-card,
+.table-card {
+	margin: 0;
+	border: 1px solid #dce6f3;
+	border-radius: 14px;
+	background: #ffffff;
+	box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+	overflow: hidden;
+}
+
+.plaketten {
+	display: flex;
+	gap: 12px;
+	padding: 12px;
+	overflow-x: auto;
+	scroll-snap-type: x mandatory;
+	-webkit-overflow-scrolling: touch;
+	background-color: #e5e5e5;
+}
+
+.plakette {
+	min-width: 180px;
+	flex: 0 0 auto;
+	text-align: center;
+	scroll-snap-align: start;
+}
+
+.plakette img {
+	width: 85%;
+	max-width: 220px;
+	height: auto;
+	display: block;
+	margin: 0 auto 8px;
+}
+
+.jahreszahl {
+	font-size: 1.05rem;
+	font-weight: 700;
+	color: #2d3f5f;
+}
+
+.info-card ion-list,
+.table-card {
+	background: #ffffff;
+}
+
+.info-card ion-item {
+	--background: transparent;
+	--border-color: #edf1f6;
+}
+
+.table-card table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.9rem;
+	color: #2d3f5f;
+}
+
+.table-card th,
+.table-card td {
+	padding: 10px 12px;
+	border-bottom: 1px solid #edf1f6;
+	vertical-align: top;
+}
+
+.table-card th {
+	background: #eef5ff;
+	text-align: left;
+	font-weight: 700;
+}
+
+.table-card tr:last-child td {
+	border-bottom: none;
+}
+
+@media (min-width: 1024px) {
+	.left-header-btn,
+	.right-header-btn {
+		display: none;
+	}
+}

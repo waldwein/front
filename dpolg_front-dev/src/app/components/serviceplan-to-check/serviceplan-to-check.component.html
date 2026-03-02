@@ -1,0 +1,124 @@
+<app-header class="modal-header" [menuState]="false">
+	<ion-button *ngIf="this.view.activeIndex === 0" headerLeft fill="clear" color="dark" (click)="closeModal()">
+		<ion-icon slot="icon-only" name="close-outline"></ion-icon>
+	</ion-button>
+	<ion-button *ngIf="view.activeIndex > 0" headerLeft fill="clear" color="dark" (click)="backSlide()">
+		<ion-icon slot="icon-only" name="chevron-back-outline"></ion-icon>
+	</ion-button>
+	<div headerCenter [ngSwitch]="view.activeIndex">
+		<ng-container *ngSwitchCase="0">
+			<h5 class="app-calendar__title" [innerHTML]="'select_template_step_0' | translate"></h5>
+		</ng-container>
+		<ng-container *ngSwitchCase="1">
+			<h5 class="app-calendar__title" [innerHTML]="'select_template_step_1' | translate"></h5>
+		</ng-container>
+	</div>
+</app-header>
+
+<swiper-container #selectTemplate class="swiper-container" pagination="true" allow-touch-move="false">
+	<!-- slide 1 -->
+	<swiper-slide>
+		<div class="container">
+			<div class="service-list">
+				<ion-list>
+					<ng-container *ngFor="let plan of reviewPlans">
+						<ion-item lines="none" class="list-item">
+							<div class="plan-row">
+								<button color="clear" class="app-btn country-card plan-card" (click)="pickServiceplan(plan)">
+									<ion-label [innerHTML]="plan.name | translate"></ion-label>
+								</button>
+
+								<div class="plan-actions">
+									<ion-button
+										color="medium"
+										fill="clear"
+										class="template-info-button"
+										(click)="toggleTemplateInfo(plan, $event)"
+										[attr.aria-label]="'template details'"
+									>
+										<ion-icon [name]="isTemplateInfoOpen(plan) ? 'information-circle' : 'information-circle-outline'"></ion-icon>
+									</ion-button>
+
+									<ion-button color="success" fill="clear" class="publish-serviceplan-button" (click)="requestApprovePlan(plan, $event)">
+										<ion-icon name="checkmark-circle-outline"></ion-icon>
+									</ion-button>
+
+									<ion-button color="danger" fill="clear" class="delete-serviceplan-button" (click)="requestDeclinePlan(plan, $event)">
+										<ion-icon name="close-circle-outline"></ion-icon>
+									</ion-button>
+								</div>
+							</div>
+						</ion-item>
+
+						<div class="template-meta-wrap" *ngIf="isTemplateInfoOpen(plan)">
+							<div class="template-meta">
+								<div class="template-meta__empty" *ngIf="!hasTemplateDetails(plan)">
+									<ion-icon name="information-circle-outline"></ion-icon>
+									<span>No additional details</span>
+								</div>
+
+								<div class="template-meta__row" *ngIf="plan?.countryId">
+									<ion-icon name="location-outline"></ion-icon>
+									<span>{{ "region" | translate }}: {{ getTemplateCountryName(plan) | translate }}</span>
+								</div>
+
+								<div class="template-meta__row" *ngIf="plan?.author">
+									<ion-icon name="mail-outline"></ion-icon>
+									<span>{{ "admin_email" | translate }}: {{ plan.author }}</span>
+								</div>
+
+								<div class="template-meta__row" *ngIf="plan?.note">
+									<ion-icon name="document-text-outline"></ion-icon>
+									<span>{{ "chosen_day_info" | translate }}: {{ plan.note }}</span>
+								</div>
+							</div>
+						</div>
+					</ng-container>
+				</ion-list>
+			</div>
+		</div>
+	</swiper-slide>
+
+	<!-- slide 2 -->
+	<swiper-slide>
+		<div class="container">
+			<div class="group-list">
+				<ion-list>
+					<ion-item lines="none" class="list-item">
+						<button color="primary" class="app-btn country-card plan-card" (click)="pickGroup('all')">
+							<ion-label [innerHTML]="'Alle Gruppen' | translate"></ion-label>
+						</button>
+					</ion-item>
+					<ion-item lines="none" class="list-item" *ngFor="let group of filteredGroups; let iGroup = index">
+						<button color="clear" class="app-btn country-card plan-card" (click)="pickGroup(iGroup)">
+							<ion-label [innerHTML]="group.name | translate"></ion-label>
+						</button>
+					</ion-item>
+				</ion-list>
+			</div>
+		</div>
+	</swiper-slide>
+</swiper-container>
+
+<ion-alert
+	[isOpen]="aplyAlert.state"
+	[header]="aplyAlert.header | translate"
+	[buttons]="aplyAlert.buttons"
+	(didDismiss)="aplyAlert.setAplyAlertState()"
+></ion-alert>
+
+<ion-alert
+	[isOpen]="approveAlert.state"
+	[header]="approveAlert.header | translate"
+	[message]="approveAlert.message | translate"
+	[buttons]="approveAlert.buttons"
+	(didDismiss)="approveAlert.setApproveAlertState()"
+></ion-alert>
+
+<ion-alert
+	[isOpen]="declineAlert.state"
+	[header]="declineAlert.header | translate"
+	[message]="declineAlert.message | translate"
+	[buttons]="declineAlert.buttons"
+	(didDismiss)="declineAlert.setDeclineAlertState()"
+></ion-alert>

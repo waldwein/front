@@ -1,0 +1,420 @@
+<app-header class="modal-header" [hideLeft]="true">
+  <ion-button headerLeft fill="clear" color="dark" (click)="closeModal()">
+    <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+  </ion-button>
+
+  <h5 headerCenter class="app-calendar__title" [innerHTML]="'serviceplan_step_' + (view.activeIndex || 0) | translate"></h5>
+
+  <ion-progress-bar headerBottom class="step-progress" [value]="stepProgress"></ion-progress-bar>
+</app-header>
+
+<ion-content>
+  <swiper-container #createSPSwiper class="swiper-container" allow-touch-move="false">
+    <!-- STEP 1 -->
+    <swiper-slide>
+      <div class="container step_1">
+        <ion-card *ngIf="!view.services.length" class="placeholder">
+          <ion-list lines="none">
+            <ion-item class="ion-text-wrap">
+              <ion-label>
+                <div class="placeholder-hint" [innerHTML]="'serviceplan_services_hint' | translate"></div>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+        </ion-card>
+
+        <ion-card *ngFor="let service of view.services; let iService = index" class="service-card">
+          <ion-list lines="none">
+            <ion-item class="service-row service-inline">
+              <div class="service-inline-content">
+                <ion-input
+                  class="service-input service-input--name"
+                  type="text"
+                  [(ngModel)]="service.name"
+                  [placeholder]="'service_name' | translate"
+                  labelPlacement="start"
+                  [disabled]="!!service.disabled"
+                  [name]="'service' + iService"
+                  (ionChange)="onUserInputChanged()"
+                  (ionInput)="onUserInputChanged()"
+                ></ion-input>
+
+                <span class="service-divider" aria-hidden="true"></span>
+
+                <ion-input
+                  class="service-input service-input--desc"
+                  type="text"
+                  [(ngModel)]="service.description"
+                  [placeholder]="'service_description' | translate"
+                  [disabled]="!!service.disabled"
+                  [name]="'serviceDesc' + iService"
+                  (ionChange)="onUserInputChanged()"
+                  (ionInput)="onUserInputChanged()"
+                ></ion-input>
+              </div>
+
+              <ion-button
+                slot="end"
+                color="danger"
+                fill="clear"
+                class="delete-service-button"
+                (click)="deleteService(iService)"
+                [hidden]="!!service.disabled"
+                [disabled]="!!service.disabled"
+              >
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+          </ion-list>
+        </ion-card>
+      </div>
+    </swiper-slide>
+
+    <!-- STEP 2 -->
+    <swiper-slide>
+      <div class="container step_2">
+        <ion-card *ngIf="!view.groups.length" class="placeholder">
+          <ion-list lines="none">
+            <ion-item class="ion-text-wrap">
+              <ion-label>
+                <div class="placeholder-hint" [innerHTML]="'serviceplan_groups_placeholder_hint' | translate"></div>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+        </ion-card>
+
+        <ion-card *ngFor="let group of view.groups; let iGroup = index">
+          <ion-list lines="none">
+            <ion-item class="ion-text-wrap">
+              <ion-input
+                type="text"
+                [(ngModel)]="group.name"
+                [placeholder]="'group_name' | translate"
+                [label]="('group' | translate) + ' ' + (iGroup + 1)"
+                labelPlacement="start"
+                [disabled]="!!group.disabled"
+                [name]="'group' + iGroup"
+                (ionChange)="onUserInputChanged()"
+                (ionInput)="onUserInputChanged()"
+              ></ion-input>
+
+              <ion-button slot="end" color="danger" fill="clear" (click)="deleteGroup(iGroup)" [hidden]="!iGroup">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-item>
+          </ion-list>
+        </ion-card>
+      </div>
+    </swiper-slide>
+
+    <!-- STEP 3 -->
+    <swiper-slide>
+      <div class="container step_3">
+        <div class="service-toolbar">
+          <!-- <div class="toolbar-header">
+            <ion-label class="toolbar-title">{{ "service" | translate }}</ion-label>
+            <ion-badge color="primary" *ngIf="activeShiftIndex !== null">
+              {{ "shift" | translate }} {{ (activeShiftIndex || 0) + 1 }}
+            </ion-badge>
+          </div> -->
+
+          <div class="service-scroll">
+            <ion-button
+              *ngFor="let _service of view.services; let _iService = index"
+              size="small"
+              [color]="isActiveService(_iService) ? 'primary' : 'medium'"
+              [fill]="isActiveService(_iService) ? 'solid' : 'outline'"
+              (click)="assignServiceToActive(_service, _iService)"
+            >
+              {{ _service.name }}
+            </ion-button>
+          </div>
+        </div>
+
+        <ion-card *ngIf="!view.shifts.length" class="placeholder">
+          <ion-list lines="none">
+            <ion-item class="ion-text-wrap">
+              <ion-label>
+                <div class="placeholder-hint" [innerHTML]="'serviceplan_shifts_placeholder_hint' | translate"></div>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+        </ion-card>
+
+        <ion-card *ngFor="let shift of view.shifts; let iShift = index">
+          <ion-item
+            lines="none"
+            class="ion-text-wrap shift-item"
+            [class.active]="activeShiftIndex === iShift"
+            (click)="setActiveShift(iShift)"
+          >
+            <div class="shift-header">
+              <ion-label class="shift-label">{{ iShift + 1 }}</ion-label>
+
+              <div class="shift-meta">
+                <!-- <ion-badge color="success" *ngIf="activeShiftIndex === iShift">Active</ion-badge> -->
+                <span class="assigned-service">
+                  {{ view.services[shift.service]?.name || ("service" | translate) }}
+                </span>
+              </div>
+
+              <ion-button
+                size="small"
+                color="danger"
+                fill="clear"
+                class="delete-shift-button"
+                (click)="deleteShift(iShift); $event.stopPropagation()"
+              >
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-item>
+        </ion-card>
+      </div>
+    </swiper-slide>
+
+    <!-- STEP 4 -->
+    <swiper-slide>
+      <div class="container step_4">
+        <ion-card *ngFor="let group of view.groups; let iGroup = index">
+          <ion-list lines="none">
+            <ion-item class="ion-text-wrap">
+              <ion-label [innerHTML]="group.name" class="ion-text-wrap"></ion-label>
+
+              <!-- <ion-input type="date" [(ngModel)]="group.start" slot="end" datetime="datetime" [name]="'groupDate' + iGroup" (ionChange)="onInputChanged()" (ionInput)="onInputChanged()"></ion-input>
+              -->
+              <ion-datetime-button [datetime]="'group' + iGroup"></ion-datetime-button>
+
+              <!-- <ion-button slot="end" color="danger" fill="clear" (click)="deleteGroupStart(iGroup)">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button> -->
+            </ion-item>
+          </ion-list>
+
+          <ion-modal
+            class="group-date-modal"
+            [keepContentsMounted]="true"
+            [showBackdrop]="true"
+            [backdropDismiss]="true"
+            [enterAnimation]="modalEnterAnimation"
+            [leaveAnimation]="modalLeaveAnimation"
+          >
+            <ng-template>
+              <ion-datetime
+                (ionChange)="onStartDateChanged($event, iGroup)"
+                [id]="'group' + iGroup"
+                [value]="getGroupStartValue(group)"
+                display-format="HH"
+                presentation="date"
+                locale="de-DE"
+                [firstDayOfWeek]="1"
+              ></ion-datetime>
+            </ng-template>
+          </ion-modal>
+        </ion-card>
+      </div>
+    </swiper-slide>
+
+    <!-- STEP 5 -->
+    <swiper-slide>
+      <div class="container step_5">
+        <ion-card>
+          <ion-item lines="none">
+            <ion-input
+              type="text"
+              [(ngModel)]="view.plan.name"
+              [placeholder]="'serviceplan_name' | translate"
+              [label]="'name' | translate"
+              labelPlacement="start"
+              (ionChange)="onUserInputChanged()"
+              (ionInput)="onUserInputChanged()"
+            ></ion-input>
+          </ion-item>
+
+          <!--
+          <ion-item lines="none">
+            <ion-input type="date" [(ngModel)]="view.plan.shiftjump" [label]="'serviceplan_shiftjump'|translate" labelPlacement="start" datetime="datetime" (ionChange)="onInputChanged()" (ionInput)="onInputChanged()"></ion-input>
+          </ion-item>
+          -->
+        </ion-card>
+
+        <ion-card class="visibility-card">
+          <ion-radio-group [(ngModel)]="view.plan.visibility" (ionChange)="onVisibilityChanged()">
+            <ion-item
+              lines="none"
+              class="visibility-option"
+              [class.selected]="view.plan.visibility === 'local'"
+              [button]="true"
+              (click)="setVisibility('local')"
+            >
+              <ion-radio slot="start" value="local"></ion-radio>
+              <ion-label class="ion-text-wrap">
+                <h6 class="option-title" [innerHTML]="'serviceplan_template_save_local' | translate"></h6>
+                <p class="option-desc" [innerHTML]="'serviceplan_template_save_local_hint' | translate"></p>
+              </ion-label>
+              <ion-icon slot="end" name="phone-portrait-outline"></ion-icon>
+            </ion-item>
+
+            <ion-item
+              lines="none"
+              class="visibility-option"
+              [class.selected]="view.plan.visibility === 'public'"
+              [button]="true"
+              (click)="setVisibility('public')"
+            >
+              <ion-radio slot="start" value="public"></ion-radio>
+              <ion-label class="ion-text-wrap">
+                <h6 class="option-title" [innerHTML]="'serviceplan_publish_public' | translate"></h6>
+                <p class="option-desc" [innerHTML]="'serviceplan_publish_public_hint' | translate"></p>
+              </ion-label>
+              <ion-icon slot="end" name="globe-outline"></ion-icon>
+            </ion-item>
+          </ion-radio-group>
+        </ion-card>
+
+        <ion-card *ngIf="view.plan.visibility === 'public'" class="public-card">
+          <ion-item lines="none" class="region-item">
+            <ion-icon name="location-outline" slot="start"></ion-icon>
+            <ion-select
+              class="app_input"
+              [label]="'region' | translate"
+              [okText]="'okay' | translate"
+              [cancelText]="'cancel' | translate"
+              [(ngModel)]="view.plan.countryId"
+              (ionChange)="onUserInputChanged()"
+            >
+              <ion-select-option
+                *ngFor="let country of countries"
+                [innerHTML]="country.name | translate"
+                [value]="country.id"
+              ></ion-select-option>
+            </ion-select>
+
+            <ion-button slot="end" fill="clear" color="medium" class="info-toggle" (click)="togglePublicInfo($event)">
+              <ion-icon slot="icon-only" name="information-circle-outline"></ion-icon>
+            </ion-button>
+          </ion-item>
+
+          <ion-item *ngIf="showPublicInfo" lines="none" class="public-info">
+            <ion-label class="ion-text-wrap">
+              <p [innerHTML]="'serviceplan_public_review_info_text' | translate"></p>
+            </ion-label>
+          </ion-item>
+
+          <ion-item lines="none" class="public-note-item">
+            <ion-icon name="create-outline" slot="start"></ion-icon>
+            <ion-input
+              class="app_input"
+              [label]="'chosen_day_info' | translate"
+              [placeholder]="'serviceplan_publish_public_hint' | translate"
+              maxlength="140"
+              [(ngModel)]="note"
+              (ionInput)="onUserInputChanged()"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item lines="none" class="public-note-item">
+            <ion-icon name="mail-outline" slot="start"></ion-icon>
+            <ion-input
+              class="app_input"
+              type="email"
+              inputmode="email"
+              [label]="'admin_email' | translate"
+              [placeholder]="'admin_email' | translate"
+              [required]="true"
+              [(ngModel)]="author"
+              (ionInput)="onUserInputChanged()"
+            ></ion-input>
+          </ion-item>
+        </ion-card>
+      </div>
+    </swiper-slide>
+  </swiper-container>
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <div class="footer-container">
+    <ion-row
+      class="row-1"
+      *ngIf="view.activeIndex !== null && view.activeIndex !== undefined && (view.activeIndex < 3 || isStepHintVisible(view.activeIndex))"
+    >
+      <ion-col size="12" class="footer-col">
+        <div class="footer-add-row" [class.note-only]="view.activeIndex > 2">
+          <ion-button size="block" fill="outline" shape="round" (click)="addService()" *ngIf="view.activeIndex == 0">
+            <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+            <ion-label [innerHTML]="'add' | translate"></ion-label>
+          </ion-button>
+
+          <ion-button size="block" fill="outline" shape="round" (click)="addGroup()" *ngIf="view.activeIndex == 1">
+            <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+            <ion-label [innerHTML]="'add' | translate"></ion-label>
+          </ion-button>
+
+          <ion-button size="block" fill="outline" shape="round" (click)="addShift()" *ngIf="view.activeIndex == 2">
+            <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+            <ion-label [innerHTML]="'add' | translate"></ion-label>
+          </ion-button>
+        </div>
+      </ion-col>
+
+      <ion-col size="12" *ngIf="isStepHintVisible(view.activeIndex)">
+        <div class="footer-note" [class.full-width]="view.activeIndex > 2">
+          <ion-icon name="information-circle-outline"></ion-icon>
+          <ion-label class="ion-text-wrap">
+            <ng-container [ngSwitch]="view.activeIndex">
+              <span *ngSwitchCase="0" [innerHTML]="'serviceplan_services_hint' | translate"></span>
+              <span *ngSwitchCase="1" [innerHTML]="'serviceplan_groups_hint' | translate"></span>
+              <span *ngSwitchCase="2" [innerHTML]="'serviceplan_shifts_hint' | translate"></span>
+              <span *ngSwitchCase="3" [innerHTML]="'serviceplan_group_start_hint' | translate"></span>
+              <span *ngSwitchCase="4" [innerHTML]="'serviceplan_plan_hint' | translate"></span>
+            </ng-container>
+          </ion-label>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="row-2">
+      <ion-col size="6">
+        <ion-button *ngIf="view.activeIndex > 0" size="block" fill="outline" shape="round" class="back" (click)="back()">
+          <ion-icon name="chevron-back-outline"></ion-icon>
+          <ion-label [innerHTML]="'goBack' | translate"></ion-label>
+        </ion-button>
+      </ion-col>
+
+      <ion-col size="6">
+        <ion-button *ngIf="!view.isEnd" expand="block" (click)="next()" [disabled]="!view.canSlideNext" fill="outline" shape="round">
+          <ion-label [innerHTML]="'next' | translate"></ion-label>
+          <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+        </ion-button>
+
+        <ion-button *ngIf="view.isEnd" expand="block" (click)="prepareToSubmit()" [disabled]="!canSubmit || submitInProgress" fill="outline" shape="round">
+          <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+          <ion-label [innerHTML]="'submit' | translate"></ion-label>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </div>
+</ion-footer>
+
+<ion-alert
+  [isOpen]="publicAlert.state"
+  [header]="publicAlert.header | translate"
+  [message]="publicAlert.message | translate"
+  [buttons]="publicAlert.buttons"
+  (didDismiss)="publicAlert.setPublicAlertState()"
+></ion-alert>
+
+<ion-alert
+  [isOpen]="applyAlert.state"
+  [header]="applyAlert.header | translate"
+  [message]="applyAlert.message | translate"
+  [buttons]="applyAlert.buttons"
+  (didDismiss)="applyAlert.setApplyAlertState()"
+></ion-alert>
+
+<ion-alert
+  [isOpen]="finishAlertSettings.state"
+  [header]="finishAlertSettings.header | translate"
+  [message]="finishAlertSettings.getFinishAlertMessage() | translate"
+  [buttons]="finishAlertSettings.buttons"
+></ion-alert>

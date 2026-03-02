@@ -1,0 +1,60 @@
+<ion-app>
+	<app-header>
+		<div headerLeft class="btn-container left-header-btn">
+			<ion-button class="menu-trigger" size="small" fill="clear" color="dark" (click)="openMainMenu()">
+				<ion-icon slot="icon-only" name="menu"></ion-icon>
+			</ion-button>
+		</div>
+		<h5 headerCenter [innerHTML]="'medical_care' | translate"></h5>
+		<div headerBottom class="catalog-search">
+			<app-search-bar (searchChange)="onSearch($event)"></app-search-bar>
+		</div>
+		<ion-button
+			headerRight
+			class="home-trigger right-header-btn"
+			size="small"
+			fill="clear"
+			color="dark"
+			routerLink="/"
+			routerDirection="root"
+			[attr.aria-label]="'home_lable' | translate"
+		>
+			<ion-icon slot="icon-only" name="home-outline"></ion-icon>
+		</ion-button>
+	</app-header>
+
+	<ion-content [fullscreen]="true">
+		<ion-refresher slot="fixed" (ionRefresh)="loadPosts($event)">
+			<ion-refresher-content></ion-refresher-content>
+		</ion-refresher>
+
+		<div class="state" *ngIf="isLoading">
+			<ion-spinner name="crescent"></ion-spinner>
+		</div>
+
+		<ion-card class="error-card" *ngIf="loadError">
+			<ion-card-header>
+				<ion-card-title [innerHTML]="'error_title' | translate"></ion-card-title>
+			</ion-card-header>
+			<ion-card-content>{{ loadError }}</ion-card-content>
+		</ion-card>
+
+		<div class="health-list" *ngIf="!isLoading && postsByYear.length">
+			<ion-list>
+				<ng-container *ngFor="let group of postsByYear; trackBy: trackByYear">
+					<ion-item class="health-row" *ngFor="let post of group.items; trackBy: trackByPost" lines="full" button (click)="openDocument(post)">
+						<ion-label>
+							<h3 class="health-title">{{ getTitle(post) || ('document' | translate) }}</h3>
+							<!-- <p>{{ getDate(post) }}</p> -->
+						</ion-label>
+						<ion-icon name="document-text-outline" slot="end"></ion-icon>
+					</ion-item>
+				</ng-container>
+			</ion-list>
+		</div>
+
+		<ion-item class="empty-state" *ngIf="!isLoading && !postsByYear.length && !loadError">
+			<ion-label [innerHTML]="'no_entries_found' | translate"></ion-label>
+		</ion-item>
+	</ion-content>
+</ion-app>

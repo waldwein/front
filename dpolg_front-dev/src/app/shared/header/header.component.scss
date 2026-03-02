@@ -1,0 +1,129 @@
+//Header
+:host {
+	display: block;
+	width: 100%;
+}
+
+.main-header {
+	border-bottom: 1px solid #dce6f3;
+	background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
+	padding: 8px 12px;
+	min-height: 60px;
+	box-shadow: 0 1px 0 rgba(0, 90, 172, 0.04);
+
+	ion-row {
+		display: flex;
+		flex-wrap: nowrap;
+		min-height: 44px;
+		align-items: center;
+		margin: 0 auto;
+		// width: min(100%, 1180px);
+		width: 100%;
+	}
+
+	> [headerBottom] {
+		display: block;
+		// width: min(100%, 1180px);
+		width: 100%;
+
+		margin: 0 auto;
+	}
+
+	.app-col {
+		display: flex;
+		align-items: center;
+		min-height: 44px;
+		padding: 0;
+
+		&__search {
+			padding: 0;
+		}
+
+		&.left {
+			flex: 0 0 44px;
+			max-width: 44px;
+			justify-content: flex-start;
+		}
+
+		&.right {
+			flex: 0 0 44px;
+			max-width: 44px;
+			justify-content: flex-end;
+		}
+	}
+
+	.app-col.app-center {
+		flex: 1 1 0;
+		min-width: 0;
+		justify-content: center;
+		text-align: center;
+		padding: 0 8px;
+	}
+
+	.app-col.app-center h5,
+	.app-col.app-center h4,
+	.app-col.app-center h3,
+	.app-col.app-center h2,
+	.app-col.app-center h1 {
+		margin: 0;
+		width: 100%;
+		text-align: center;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.btn-chat__container {
+		display: inline-flex;
+		align-items: center;
+		justify-content: flex-end;
+		min-height: 32px;
+		width: 100%;
+	}
+
+	&.multi-actions {
+		.app-col.right {
+			flex: 0 0 88px;
+			max-width: 88px;
+		}
+
+		.btn-chat__container {
+			gap: 6px;
+		}
+	}
+
+	&.center-only {
+		.app-col.left,
+		.app-col.right {
+			flex-basis: 0;
+			max-width: 0;
+			min-width: 0;
+			overflow: hidden;
+		}
+
+		.app-col.app-center {
+			padding-inline: 0;
+		}
+	}
+
+	.app-calendar-title {
+		font-size: 1.5em;
+		font-weight: 400;
+		margin: 0;
+	}
+
+	.app-center {
+		display: flex;
+		justify-content: center;
+	}
+}
+
+h5 {
+	margin: 0;
+}
+
+@media (min-width: 1100px) {
+	.main-header .menu-trigger {
+		display: none;
+	}
+}

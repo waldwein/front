@@ -1,0 +1,31 @@
+<!-- src/app/shared/header/header.component.html -->
+<ion-header class="main-header" [class.center-only]="centerOnly">
+  <ion-row>
+    <!-- ---------- left column (slot + default) ---------- -->
+    <ion-col class="app-col left">
+      <ng-content select="[headerLeft]"></ng-content>
+    </ion-col>
+
+    <!-- ---------- centre column (unchanged) ---------- -->
+    <ion-col class="app-col app-center">
+      <ng-content select="[headerCenter]"></ng-content>
+    </ion-col>
+
+    <!-- ---------- right column (unchanged) ---------- -->
+    <ion-col class="app-col right">
+      <div class="btn-container btn-chat__container">
+        <ng-content select="[headerRight]"></ng-content>
+      </div>
+    </ion-col>
+  </ion-row>
+  <ng-content select="[headerBottom]"></ng-content>
+</ion-header>
+
+<!-- ---------- default left slot template ---------- -->
+<ng-template #defaultHeaderLeft>
+  <div class="btn-container">
+    <ion-button class="menu-trigger" size="small" fill="clear" color="dark" (click)="openMainMenu()">
+      <ion-icon slot="icon-only" name="menu"></ion-icon>
+    </ion-button>
+  </div>
+</ng-template>
